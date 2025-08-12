@@ -1,0 +1,98 @@
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>
+                <i class="fas fa-plus-circle me-2"></i>
+                Add New Result
+            </h2>
+            <a href="/results" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Results
+            </a>
+        </div>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                Error adding result. Please try again.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-edit me-2"></i>
+                    Result Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <form action="/results" method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="student_id" class="form-label">Student *</label>
+                            <select class="form-select" id="student_id" name="student_id" required>
+                                <option value="">Select Student</option>
+                                <% if (students && students.length > 0) { %>
+                                    <% students.forEach(student => { %>
+                                        <option value="<%= student.id %>">
+                                            <%= student.name %> (<%= student.roll_number %>)
+                                        </option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                            <% if (!students || students.length === 0) { %>
+                                <div class="form-text text-danger">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    No students found. Please add students first.
+                                </div>
+                            <% } %>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="subject" class="form-label">Subject *</label>
+                            <select class="form-select" id="subject" name="subject" required>
+                                <option value="">Select Subject</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Science">Science</option>
+                                <option value="English">English</option>
+                                <option value="HIGHER MATH">HIGHER MATH</option>
+                                <option value="Social Studies">Social Studies</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Biology">Biology</option>
+                                <option value="History">History</option>
+                                <option value="Geography">Geography</option>
+                                <option value="Economics">Economics</option>
+                                <option value="Literature">Literature</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="marks" class="form-label">Marks Obtained *</label>
+                            <input type="number" class="form-control" id="marks" name="marks" min="0" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="total_marks" class="form-label">Total Marks *</label>
+                            <input type="number" class="form-control" id="total_marks" name="total_marks" min="1" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="exam_date" class="form-label">Exam Date</label>
+                            <input type="date" class="form-control" id="exam_date" name="exam_date">
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="/results" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success" <%= (!students || students.length === 0) ? 'disabled' : '' %>>
+                            <i class="fas fa-save me-2"></i>Save Result
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

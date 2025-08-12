@@ -1,0 +1,115 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        <i class="fas fa-cog me-2"></i>
+        Admin Settings
+    </h2>
+    <a href="/admin/dashboard" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+    </a>
+</div>
+
+<% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        Settings updated successfully!
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<% } %>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-shield me-2"></i>
+                    Change Admin Password
+                </h5>
+            </div>
+            <div class="card-body">
+                <form action="/admin/change-password" method="POST">
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">Current Password</label>
+                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-key me-2"></i>Change Password
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-database me-2"></i>
+                    Database Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <p><strong>Database Type:</strong></p>
+                        <p><strong>Total Students:</strong></p>
+                        <p><strong>Total Results:</strong></p>
+                        <p><strong>Total Announcements:</strong></p>
+                    </div>
+                    <div class="col-6">
+                        <p>SQLite</p>
+                        <p><%= stats.totalStudents %></p>
+                        <p><%= stats.totalResults %></p>
+                        <p><%= stats.totalAnnouncements %></p>
+                    </div>
+                </div>
+                <hr>
+                <div class="d-grid">
+                    <a href="/admin/backup" class="btn btn-outline-success">
+                        <i class="fas fa-download me-2"></i>Backup Database
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-tools me-2"></i>
+                    System Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <a href="/admin/export-students" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-file-export me-2"></i>Export Students
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/admin/export-results" class="btn btn-outline-success w-100">
+                            <i class="fas fa-file-export me-2"></i>Export Results
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/admin/clear-data" class="btn btn-outline-danger w-100" 
+                           onclick="return confirm('Are you sure you want to clear all data? This action cannot be undone!')">
+                            <i class="fas fa-trash me-2"></i>Clear All Data
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

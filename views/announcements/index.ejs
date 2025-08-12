@@ -1,0 +1,74 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        <i class="fas fa-bullhorn me-2"></i>
+        Announcements
+    </h2>
+    <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+    <a href="/announcements/new" class="btn btn-warning">
+        <i class="fas fa-plus me-2"></i>Add New Announcement
+    </a>
+    <% } else { %>
+        <div class="alert alert-info mb-0">
+            <i class="fas fa-info-circle me-2"></i>
+            Only administrators can post announcements
+        </div>
+    <% } %>
+</div>
+
+<% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        Announcement posted successfully!
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<% } %>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-list me-2"></i>
+            Announcements List
+        </h5>
+    </div>
+    <div class="card-body">
+        <% if (announcements && announcements.length > 0) { %>
+            <div class="row">
+                <% announcements.forEach(announcement => { %>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 border-<%= announcement.priority === 'high' ? 'danger' : announcement.priority === 'medium' ? 'warning' : 'info' %>">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-bullhorn me-2"></i>
+                                    <%= announcement.title %>
+                                </h6>
+                                <span class="badge bg-<%= announcement.priority === 'high' ? 'danger' : announcement.priority === 'medium' ? 'warning' : 'info' %>">
+                                    <%= announcement.priority.charAt(0).toUpperCase() + announcement.priority.slice(1) %>
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"><%= announcement.content %></p>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    Posted on <%= new Date(announcement.created_at).toLocaleDateString() %>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="text-center py-5">
+                <i class="fas fa-bullhorn fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No announcements found</h5>
+                <p class="text-muted">Start by posting your first announcement.</p>
+                <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                <a href="/announcements/new" class="btn btn-warning">
+                    <i class="fas fa-plus me-2"></i>Post First Announcement
+                </a>
+                <% } else { %>
+                    <p class="text-muted">Contact an administrator to post announcements.</p>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</div> 

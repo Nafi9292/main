@@ -1,0 +1,136 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        <i class="fas fa-users me-2"></i>
+        Students
+    </h2>
+    <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+    <a href="/students/new" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Add New Student
+    </a>
+    <% } else { %>
+        <div class="alert alert-info mb-0">
+            <i class="fas fa-info-circle me-2"></i>
+            Only administrators can manage students
+        </div>
+    <% } %>
+</div>
+
+<% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        Student <%= typeof deleted !== 'undefined' && deleted ? 'deleted' : typeof updated !== 'undefined' && updated ? 'updated' : 'added' %> successfully!
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<% } %>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-list me-2"></i>
+            Student List
+        </h5>
+    </div>
+    <div class="card-body">
+        <% if (students && students.length > 0) { %>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Roll Number</th>
+                            <th>Class</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% students.forEach(student => { %>
+                            <tr>
+                                <td><%= student.id %></td>
+                                <td><strong><%= student.name %></strong></td>
+                                <td><%= student.roll_number %></td>
+                                <td><span class="badge bg-info"><%= student.class %></span></td>
+                                <td><%= student.email || '-' %></td>
+                                <td><%= student.phone || '-' %></td>
+                                <td><small class="text-muted"><%= new Date(student.created_at).toLocaleDateString() %></small></td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="/students/<%= student.id %>/results" class="btn btn-outline-info" title="View Results">
+                                            <i class="fas fa-chart-bar"></i>
+                                        </a>
+                                        <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                                            <a href="/students/<%= student.id %>/edit" class="btn btn-outline-primary" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger" title="Delete" 
+                                                    data-student-id="<%= student.id %>" data-student-name="<%= student.name %>">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        <% } %>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="text-center py-5">
+                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No students found</h5>
+                <p class="text-muted">Start by adding your first student.</p>
+                <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                <a href="/students/new" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Add First Student
+                </a>
+                <% } else { %>
+                    <p class="text-muted">Contact an administrator to add students.</p>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</div> 
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete student "<span id="studentName"></span>"?
+                <br><br>
+                <strong class="text-danger">This action cannot be undone!</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete Student</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners to delete buttons
+    document.querySelectorAll('.btn-outline-danger').forEach(button => {
+        button.addEventListener('click', function() {
+            const studentId = this.getAttribute('data-student-id');
+            const studentName = this.getAttribute('data-student-name');
+            
+            document.getElementById('studentName').textContent = studentName;
+            document.getElementById('deleteForm').action = `/students/${studentId}/delete`;
+            
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        });
+    });
+});
+</script> 

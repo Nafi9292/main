@@ -135,13 +135,23 @@ app.get('/students/new', requireAdmin, (req, res) => {
 
 app.post('/students', requireAdmin, (req, res) => {
   const { name, roll_number, class_name, email, phone } = req.body;
+  
+  // Validate required fields
+  if (!name || !roll_number || !class_name) {
+    return res.redirect('/students/new?error=missing_fields');
+  }
+  
   db.run(
     'INSERT INTO students (name, roll_number, class, email, phone) VALUES (?, ?, ?, ?, ?)',
     [name, roll_number, class_name, email, phone],
     function(err) {
       if (err) {
         console.error(err);
-        res.redirect('/students/new?error=1');
+        if (err.message.includes('UNIQUE constraint failed')) {
+          res.redirect('/students/new?error=duplicate_roll');
+        } else {
+          res.redirect('/students/new?error=1');
+        }
       } else {
         res.redirect('/students?success=1');
       }
@@ -280,6 +290,17 @@ app.get('/results/new', requireAdmin, (req, res) => {
 
 app.post('/results', requireAdmin, (req, res) => {
   const { student_id, subject, marks, total_marks, exam_date } = req.body;
+  
+  // Validate required fields
+  if (!student_id || !subject || !marks || !total_marks) {
+    return res.redirect('/results/new?error=missing_fields');
+  }
+  
+  // Validate marks
+  if (parseInt(marks) > parseInt(total_marks)) {
+    return res.redirect('/results/new?error=invalid_marks');
+  }
+  
   db.run(
     'INSERT INTO results (student_id, subject, marks, total_marks, exam_date) VALUES (?, ?, ?, ?, ?)',
     [student_id, subject, marks, total_marks, exam_date],
@@ -315,9 +336,15 @@ app.get('/announcements/new', requireAdmin, (req, res) => {
 
 app.post('/announcements', requireAdmin, (req, res) => {
   const { title, content, priority } = req.body;
+  
+  // Validate required fields
+  if (!title || !content) {
+    return res.redirect('/announcements/new?error=missing_fields');
+  }
+  
   db.run(
     'INSERT INTO announcements (title, content, priority) VALUES (?, ?, ?)',
-    [title, content, priority],
+    [title, content, priority || 'normal'],
     function(err) {
       if (err) {
         console.error(err);
@@ -327,6 +354,32 @@ app.post('/announcements', requireAdmin, (req, res) => {
       }
     }
   );
+});
+
+// Delete result route
+app.post('/results/:id/delete', requireAdmin, (req, res) => {
+  const resultId = req.params.id;
+  db.run('DELETE FROM results WHERE id = ?', [resultId], (err) => {
+    if (err) {
+      console.error(err);
+      res.redirect('/results?error=1');
+    } else {
+      res.redirect('/results?deleted=1');
+    }
+  });
+});
+
+// Delete announcement route
+app.post('/announcements/:id/delete', requireAdmin, (req, res) => {
+  const announcementId = req.params.id;
+  db.run('DELETE FROM announcements WHERE id = ?', [announcementId], (err) => {
+    if (err) {
+      console.error(err);
+      res.redirect('/announcements?error=1');
+    } else {
+      res.redirect('/announcements?deleted=1');
+    }
+  });
 });
 
 // Admin routes
@@ -480,7 +533,36 @@ app.get('/admin/clear-data', requireAdmin, (req, res) => {
   });
 });
 
+// Health check route
+app.get('/health', (req, res) => {
+  db.get('SELECT 1 as test', (err) => {
+    if (err) {
+      res.status(500).json({ status: 'error', message: 'Database connection failed', error: err.message });
+    } else {
+      res.json({ status: 'ok', message: 'MATH POWER server is running', timestamp: new Date().toISOString() });
+    }
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).render('index', { 
+    title: 'Page Not Found - MATH POWER',
+    isAdmin: req.session.admin ? true : false
+  });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).render('index', { 
+    title: 'Server Error - MATH POWER',
+    isAdmin: req.session.admin ? true : false
+  });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Health check: http://localhost:${PORT}/health`);
 }); 

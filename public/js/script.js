@@ -1,4 +1,4 @@
-// Custom JavaScript for KJ BOARD MATH POWER
+// Custom JavaScript for MATH POWER
 
 // Theme Management
 class ThemeManager {

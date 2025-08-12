@@ -101,7 +101,7 @@ function requireAdmin(req, res, next) {
 // Routes
 app.get('/', (req, res) => {
   res.render('index', { 
-    title: 'KJ BOARD MATH POWER - Home',
+            title: 'MATH POWER - Home',
     isAdmin: req.session.admin ? true : false
   });
 });

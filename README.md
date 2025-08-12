@@ -1,6 +1,6 @@
-# KJ BOARD MATH POWER Website
+# MATH POWER Website
 
-A comprehensive web application for managing students, results, and announcements for the KJ BOARD MATH POWER.
+A comprehensive web application for managing students, results, and announcements for MATH POWER.
 
 ## Features
 
@@ -119,7 +119,7 @@ A comprehensive web application for managing students, results, and announcement
 - **Dark/Light Mode**: Theme switching with localStorage
 - **Responsive**: Mobile-first design
 - **Animations**: Smooth transitions and hover effects
-- **Professional Logo**: KJ BOARD MATH POWER branding
+- **Professional Logo**: MATH POWER branding
 
 ## 📊 Admin Features
 

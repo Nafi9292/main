@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 KJ BOARD MATH POWER - Deployment Script"
+echo "🚀 MATH POWER - Deployment Script"
 echo "=========================================="
 
 # Check if Node.js is installed

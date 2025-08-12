@@ -1,7 +1,7 @@
 {
-  "name": "ind-kj-board-website",
+  "name": "math-power-website",
   "version": "1.0.0",
-  "description": "A simple website for KJ BOARD MATH POWER to manage students, results, and announcements",
+  "description": "A simple website for MATH POWER to manage students, results, and announcements",
   "main": "server.js",
   "license": "MIT",
   "scripts": {
